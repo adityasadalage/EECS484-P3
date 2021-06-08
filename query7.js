@@ -1,20 +1,19 @@
-// query 7: Find the city average friend count per user using MapReduce
-// Using the same terminology in query6, we are asking you to write the mapper,
-// reducer and finalizer to find the average friend count for each city.
+//  Find the number of users born in each month using MapReduce
 
+var num_month_mapper = function() {
+  // Implement the map function
+    emit(this.MOB, 1);
+}
 
-var city_average_friendcount_mapper = function() {
-  // implement the Map function of average friend count
-};
+var num_month_reducer = function(key, values) {
+  // Implement the reduce function
+    return Array.sum(values);
+}
 
-var city_average_friendcount_reducer = function(key, values) {
-  // implement the reduce function of average friend count
-};
-
-var city_average_friendcount_finalizer = function(key, reduceVal) {
+var num_month_finalizer = function(key, reduceVal) {
   // We've implemented a simple forwarding finalize function. This implementation 
   // is naive: it just forwards the reduceVal to the output collection.
-  // Feel free to change it if needed.
+  // Feel free to change it if needed. 
   var ret = reduceVal;
   return ret;
 }

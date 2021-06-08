@@ -16,6 +16,35 @@
 function suggest_friends(year_diff, dbname) {
     db = db.getSiblingDB(dbname);
     var pairs = [];
+    
+    
+    /*
+    
+    db.users.find().forEach( function (A) {
+        
+        if (A.gender == "Male") {
+            db.users.find().forEach( function (A) {
+                if (B.gender == "Female" && abs(A.YOB - B.YOB) < year_diff && A.friends.indexOf(B.user_id) == -1 && B.friends.indexOf(A.user_id) == -1 && A.user_id != B.user_id && A.hometown.city == B.hometown.city) {
+                    pairs.push([A.user_id, B.user_id]);
+                }
+            });
+        }
+    });
+    
+    */
+    
+    db.users.find().forEach( function (A) {
+        
+        if (A.gender == "male") {
+            db.users.find().forEach( function (B) {
+                if (B.gender == "female" && Math.abs(A.YOB - B.YOB) < year_diff && A.friends.indexOf(B.user_id) == -1 && B.friends.indexOf(A.user_id) == -1 && A.user_id != B.user_id && A.hometown.city == B.hometown.city) {
+                    pairs.push([A.user_id, B.user_id]);
+                }
+            });
+        }
+    });
+    
+    
     // TODO: implement suggest friends
     // Return an array of arrays.
     return pairs;

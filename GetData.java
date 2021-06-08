@@ -18,12 +18,12 @@ import org.json.JSONObject;
 import org.json.JSONArray;
 
 public class GetData{
-	
+    
     static String prefix = "project3.";
-	
+    
     // You must use the following variable as the JDBC connection
     Connection oracleConnection = null;
-	
+    
     // You must refer to the following variables for the corresponding 
     // tables in your database
 
@@ -43,37 +43,37 @@ public class GetData{
 
     // This is the data structure to store all users' information
     // DO NOT change the name
-    JSONArray users_info = new JSONArray();		// declare a new JSONArray
+    JSONArray users_info = new JSONArray();        // declare a new JSONArray
 
-	
+    
     // DO NOT modify this constructor
     public GetData(String u, Connection c) {
-	super();
-	String dataType = u;
-	oracleConnection = c;
-	// You will use the following tables in your Java code
-	cityTableName = prefix+dataType+"_CITIES";
-	userTableName = prefix+dataType+"_USERS";
-	friendsTableName = prefix+dataType+"_FRIENDS";
-	currentCityTableName = prefix+dataType+"_USER_CURRENT_CITIES";
-	hometownCityTableName = prefix+dataType+"_USER_HOMETOWN_CITIES";
-	programTableName = prefix+dataType+"_PROGRAMS";
-	educationTableName = prefix+dataType+"_EDUCATION";
-	eventTableName = prefix+dataType+"_USER_EVENTS";
-	albumTableName = prefix+dataType+"_ALBUMS";
-	photoTableName = prefix+dataType+"_PHOTOS";
-	tagTableName = prefix+dataType+"_TAGS";
+    super();
+    String dataType = u;
+    oracleConnection = c;
+    // You will use the following tables in your Java code
+    cityTableName = prefix+dataType+"_CITIES";
+    userTableName = prefix+dataType+"_USERS";
+    friendsTableName = prefix+dataType+"_FRIENDS";
+    currentCityTableName = prefix+dataType+"_USER_CURRENT_CITIES";
+    hometownCityTableName = prefix+dataType+"_USER_HOMETOWN_CITIES";
+    programTableName = prefix+dataType+"_PROGRAMS";
+    educationTableName = prefix+dataType+"_EDUCATION";
+    eventTableName = prefix+dataType+"_USER_EVENTS";
+    albumTableName = prefix+dataType+"_ALBUMS";
+    photoTableName = prefix+dataType+"_PHOTOS";
+    tagTableName = prefix+dataType+"_TAGS";
     }
-	
-	
-	
-	
+    
+    
+    
+    
     //implement this function
 
     @SuppressWarnings("unchecked")
     public JSONArray toJSON() throws SQLException{ 
 
-    	JSONArray users_info = new JSONArray();
+        JSONArray users_info = new JSONArray();
         
         String QUERY = "SELECT U.USER_ID, U.FIRST_NAME, U.LAST_NAME, U.YEAR_OF_BIRTH, " +
             "U.MONTH_OF_BIRTH, U.DAY_OF_BIRTH, U.GENDER FROM " + userTableName + " U" ;
@@ -87,7 +87,7 @@ public class GetData{
             "JOIN " + cityTableName + " H ON G.HOMETOWN_CITY_ID = H.CITY_ID ";
         
         Statement stmt = oracleConnection.createStatement();
-        ResultSet rs = stmt.executeQuery(Q);	
+        ResultSet rs = stmt.executeQuery(Q);    
         
         while(rs.next()){
             //Display values
@@ -121,7 +121,6 @@ public class GetData{
                 obj.put("hometown", h_city);
             }
             
-            
             obj.put("gender", rs.getString("GENDER"));
             
             obj.put("user_id", rs.getInt("USER_ID"));
@@ -132,39 +131,41 @@ public class GetData{
             
             
             JSONArray friends = new JSONArray();
-            /*
-            ResultSet f = stmt.executeQuery("SELECT U.USER_ID1 AS USER_ID FROM " + friendsTableName + " U WHERE U.USER_ID2 = " + rs.getInt("USER_ID") + " UNION SELECT F.USER_ID2 AS USER_ID FROM " + friendsTableName + " F WHERE F.USER_ID1 = " + rs.getInt("USER_ID"));
+            Statement f_stmt = oracleConnection.createStatement();
             
-            while(f.next) {
+            ResultSet f = f_stmt.executeQuery("SELECT U.USER2_ID AS USER_ID FROM " + friendsTableName + " U WHERE U.USER1_ID = " + rs.getInt("USER_ID"));
+            
+            while(f.next()) {
                 friends.put(f.getInt("USER_ID"));
             }
             
-            */
+            f_stmt.close();
+            
             obj.put("friends", friends);
             
             users_info.put(obj);
             
         }
         
-		
-	// Your implementation goes here....		
-    	
-		
-		return users_info;
+        
+    // Your implementation goes here....        
+        
+        
+        return users_info;
     }
 
     // This outputs to a file "output.json"
     public void writeJSON(JSONArray users_info) {
-	// DO NOT MODIFY this function
-	try {
-	    FileWriter file = new FileWriter(System.getProperty("user.dir")+"/output.json");
-	    file.write(users_info.toString());
-	    file.flush();
-	    file.close();
+    // DO NOT MODIFY this function
+    try {
+        FileWriter file = new FileWriter(System.getProperty("user.dir")+"/output.json");
+        file.write(users_info.toString());
+        file.flush();
+        file.close();
 
-	} catch (IOException e) {
-	    e.printStackTrace();
-	}
-		
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+        
     }
 }
